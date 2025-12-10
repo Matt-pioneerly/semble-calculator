@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semble Value Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #F3F5F3;
+            color: #000605;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #000605;
+        }
+
+        .header p {
+            font-size: 1.125rem;
+            color: #4C5456;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .card-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .card-description {
+            color: #4C5456;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .icon {
+            color: #007D7D;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #48B2A6;
+            box-shadow: 0 0 0 3px rgba(72, 178, 166, 0.1);
+        }
+
+        input[type="checkbox"] {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.5rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .nested-input {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .separator {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 1.5rem 0;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .summary-card {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .summary-card.time {
+            background-color: #A4B2FD;
+        }
+
+        .summary-card.money {
+            background-color: #48B2A6;
+        }
+
+        .summary-card.clicks {
+            background-color: #B8A7FC;
+        }
+
+        .summary-icon {
+            font-size: 2rem;
+        }
+
+        .summary-content p {
+            margin: 0;
+        }
+
+        .summary-label {
+            font-size: 0.875rem;
+            opacity: 0.7;
+        }
+
+        .summary-value {
+            font-size: 1.875rem;
+            font-weight: 700;
+            line-height: 1;
+            margin: 0.25rem 0;
+        }
+
+        .summary-unit {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .metric {
+            margin-bottom: 1rem;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: #4C5456;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .metric-value.green {
+            color: #48B2A6;
+        }
+
+        .metric-value.blue {
+            color: #A4B2FD;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: #e5e7eb;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .final-summary {
+            background: linear-gradient(135deg, #A4B2FD 0%, #B8A7FC 100%);
+            border: 2px solid #48B2A6;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .final-summary h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .final-grid {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .final-metric {
+            text-align: center;
+        }
+
+        .final-metric-label {
+            font-size: 0.875rem;
+            opacity: 0.7;
+            margin-bottom: 0.5rem;
+        }
+
+        .final-metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .plus {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .results {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .two-col-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .two-col-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .three-col-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .three-col-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Semble Value Calculator</h1>
+            <p>Discover how much time and money Semble can save your practice</p>
+        </div>
+
+        <div class="grid">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="icon">👥</span>
+                        <h2>Practice Information</h2>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="patients">Patients per week</label>
+                        <input type="number" id="patients" value="50" min="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hourlyRate">Your hourly rate (£)</label>
+                        <input type="number" id="hourlyRate" value="100" min="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appointmentValue">Average appointment value (£)</label>
+                        <input type="number" id="appointmentValue" value="150" min="0">
+                    </div>
+
+                    <div class="separator"></div>
+
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="prescribe" checked>
+                            <label for="prescribe" style="margin: 0;">I prescribe medications</label>
+                        </div>
+                        <div id="prescribeInputs" class="nested-input">
+                            <label for="prescriptionPercent">% of patients</label>
+                            <input type="number" id="prescriptionPercent" value="30" min="0" max="100">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="refer" checked>
+                            <label for="refer" style="margin: 0;">I make referrals</label>
+                        </div>
+                        <div id="referInputs" class="nested-input">
+                            <label for="referralPercent">% of patients</label>
+                            <input type="number" id="referralPercent" value="20" min="0" max="100">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="icon">📈</span>
+                        <h2>Operational Metrics</h2>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lateInvoice">Late invoices (%)</label>
+                        <input type="number" id="lateInvoice" value="15" min="0" max="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="noShow">No-shows (%)</label>
+                        <input type="number" id="noShow" value="10" min="0" max="100">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="results">
+                <!-- Summary Cards -->
+                <div class="summary-grid">
+                    <div class="summary-card time">
+                        <div class="summary-icon">⏰</div>
+                        <div class="summary-content">
+                            <p class="summary-label">Time Saved</p>
+                            <p class="summary-value" id="totalTime">0</p>
+                            <p class="summary-unit">hours/year</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card money">
+                        <div class="summary-icon">💰</div>
+                        <div class="summary-content">
+                            <p class="summary-label">Value Generated</p>
+                            <p class="summary-value" id="totalMoney">£0</p>
+                            <p class="summary-unit">per year</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card clicks">
+                        <div class="summary-icon">🖱️</div>
+                        <div class="summary-content">
+                            <p class="summary-label">Clicks Saved</p>
+                            <p class="summary-value" id="totalClicks">0</p>
+                            <p class="summary-unit">per year</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Documentation -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="icon">📝</span>
+                        <div>
+                            <h2>AI Documentation & Letters</h2>
+                            <p class="card-description">Automated clinical notes and correspondence</p>
+                        </div>
+                    </div>
+                    
+                    <div class="metric-grid">
+                        <div class="metric">
+                            <p class="metric-label">Notes created per year</p>
+                            <p class="metric-value" id="notesPerYear">0</p>
+                        </div>
+                        <div class="metric">
+                            <p class="metric-label">Letters generated per year</p>
+                            <p class="metric-value" id="lettersPerYear">0</p>
+                        </div>
+                    </div>
+
+                    <div class="separator"></div>
+
+                    <div class="metric-grid">
+                        <div class="metric">
+                            <p class="metric-label">Time saved on notes</p>
+                            <p class="metric-value green" id="noteTimeSaved">0 hours</p>
+                            <span class="badge" id="noteMoneySaved">£0</span>
+                        </div>
+                        <div class="metric">
+                            <p class="metric-label">Time saved on letters</p>
+                            <p class="metric-value green" id="letterTimeSaved">0 hours</p>
+                            <span class="badge" id="letterMoneySaved">£0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Booking & Communication -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="icon">📅</span>
+                        <div>
+                            <h2>Booking & Communication Automation</h2>
+                            <p class="card-description">Seamless scheduling and patient communication</p>
+                        </div>
+                    </div>
+                    
+                    <div class="metric-grid">
+                        <div class="metric">
+                            <p class="metric-label">Time saved</p>
+                            <p class="metric-value green" id="commTimeSaved">0 hours</p>
+                        </div>
+                        <div class="metric">
+                            <p class="metric-label">Value generated</p>
+                            <p class="metric-value green" id="commMoneySaved">£0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment & No-shows -->
+                <div class="two-col-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Payment Collection</h2>
+                        </div>
+                        <p class="card-description">Automated invoicing and follow-ups</p>
+                        
+                        <div class="metric" style="margin-top: 1rem;">
+                            <p class="metric-label">Time saved chasing invoices</p>
+                            <p class="metric-value green" id="invoiceTimeSaved">0 hours</p>
+                        </div>
+                        <div class="metric">
+                            <p class="metric-label">Additional revenue collected</p>
+                            <p class="metric-value green" id="additionalRevenue">£0</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>No-Show Reduction</h2>
+                        </div>
+                        <p class="card-description">Automated reminders and confirmations</p>
+                        
+                        <div class="metric" style="margin-top: 1rem;">
+                            <p class="metric-label">Appointments recovered</p>
+                            <p class="metric-value blue" id="appointmentsRecovered">0</p>
+                        </div>
+                        <div class="metric">
+                            <p class="metric-label">Revenue protected</p>
+                            <p class="metric-value green" id="revenueProtected">£0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Patient Setup -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="icon">🖱️</span>
+                        <div>
+                            <h2>Patient Setup Efficiency</h2>
+                            <p class="card-description">Streamlined onboarding process</p>
+                        </div>
+                    </div>
+                    
+                    <div class="three-col-grid">
+                        <div class="metric">
+                            <p class="metric-label">Clicks saved</p>
+                            <p class="metric-value" id="clicksSaved">0</p>
+                        </div>
+                        <div class="metric">
+                            <p class="metric-label">Time saved</p>
+                            <p class="metric-value green" id="setupTimeSaved">0 hours</p>
+                        </div>
+                        <div class="metric">
+                            <p class="metric-label">Value generated</p>
+                            <p class="metric-value green" id="setupMoneySaved">£0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final Summary -->
+        <div class="final-summary">
+            <h3>Your Annual Semble Value</h3>
+            <div class="final-grid">
+                <div class="final-metric">
+                    <p class="final-metric-label">Total Time Saved</p>
+                    <p class="final-metric-value" id="finalTime">0 hours</p>
+                </div>
+                <div class="plus">+</div>
+                <div class="final-metric">
+                    <p class="final-metric-label">Total Value Generated</p>
+                    <p class="final-metric-value" id="finalMoney">£0</p>
+                </div>
+            </div>
+            <p style="margin-top: 1.5rem; opacity: 0.7; font-size: 0.875rem;">
+                Based on <span id="totalAppointments">2,400</span> patient appointments per year
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Get all inputs
+        const inputs = {
+            patients: document.getElementById('patients'),
+            hourlyRate: document.getElementById('hourlyRate'),
+            appointmentValue: document.getElementById('appointmentValue'),
+            prescribe: document.getElementById('prescribe'),
+            prescriptionPercent: document.getElementById('prescriptionPercent'),
+            refer: document.getElementById('refer'),
+            referralPercent: document.getElementById('referralPercent'),
+            lateInvoice: document.getElementById('lateInvoice'),
+            noShow: document.getElementById('noShow')
+        };
+
+        // Toggle nested inputs
+        inputs.prescribe.addEventListener('change', () => {
+            document.getElementById('prescribeInputs').style.display = 
+                inputs.prescribe.checked ? 'block' : 'none';
+            calculate();
+        });
+
+        inputs.refer.addEventListener('change', () => {
+            document.getElementById('referInputs').style.display = 
+                inputs.refer.checked ? 'block' : 'none';
+            calculate();
+        });
+
+        // Add event listeners to all inputs
+        Object.values(inputs).forEach(input => {
+            input.addEventListener('input', calculate);
+            input.addEventListener('change', calculate);
+        });
+
+        function formatNumber(num) {
+            return Math.round(num).toLocaleString();
+        }
+
+        function formatCurrency(num) {
+            return '£' + formatNumber(num);
+        }
+
+        function calculate() {
+            const patientsPerWeek = Number(inputs.patients.value) || 0;
+            const hourlyRate = Number(inputs.hourlyRate.value) || 0;
+            const appointmentValue = Number(inputs.appointmentValue.value) || 0;
+            const prescriptionPercent = Number(inputs.prescriptionPercent.value) || 0;
+            const referralPercent = Number(inputs.referralPercent.value) || 0;
+            const lateInvoicePercent = Number(inputs.lateInvoice.value) || 0;
+            const noShowPercent = Number(inputs.noShow.value) || 0;
+
+            const weeksPerYear = 48;
+            const patientsPerYear = patientsPerWeek * weeksPerYear;
+
+            // AI Transcription
+            const notesPerYear = patientsPerYear;
+            const transcriptionTimeSaved = (notesPerYear * 6) / 60; // 8 min manual - 2 min AI
+            const transcriptionMoneySaved = transcriptionTimeSaved * hourlyRate;
+
+            // Letters
+            let lettersPerYear = 0;
+            if (inputs.prescribe.checked && inputs.refer.checked) {
+                lettersPerYear = patientsPerYear * ((prescriptionPercent + referralPercent) / 100);
+            } else if (inputs.prescribe.checked) {
+                lettersPerYear = patientsPerYear * (prescriptionPercent / 100);
+            } else if (inputs.refer.checked) {
+                lettersPerYear = patientsPerYear * (referralPercent / 100);
+            }
+            const letterTimeSaved = (lettersPerYear * 12) / 60; // 15 min manual - 3 min AI
+            const letterMoneySaved = letterTimeSaved * hourlyRate;
+
+            // Communication
+            const communicationTimeSaved = (patientsPerYear * 3 * 1.9) / 60; // 2 min manual - 0.1 min auto
+            const communicationMoneySaved = communicationTimeSaved * hourlyRate;
+
+            // Invoices
+            const lateInvoices = patientsPerYear * (lateInvoicePercent / 100);
+            const invoiceTimeSaved = (lateInvoices * 10 * 0.7) / 60;
+            const invoiceMoneySaved = invoiceTimeSaved * hourlyRate;
+            const additionalRevenue = lateInvoices * appointmentValue * 0.15;
+
+            // No-shows
+            const currentNoShows = patientsPerYear * (noShowPercent / 100);
+            const reducedNoShows = currentNoShows * 0.4;
+            const noShowRevenueSaved = reducedNoShows * appointmentValue;
+
+            // Setup
+            const newPatientsPerYear = patientsPerYear * 0.3;
+            const clicksSaved = newPatientsPerYear * 37; // 45 - 8
+            const setupTimeSaved = (newPatientsPerYear * 9) / 60; // 12 - 3
+            const setupMoneySaved = setupTimeSaved * hourlyRate;
+
+            // Totals
+            const totalTimeSaved = transcriptionTimeSaved + letterTimeSaved + 
+                                 communicationTimeSaved + invoiceTimeSaved + setupTimeSaved;
+            const totalMoneySaved = transcriptionMoneySaved + letterMoneySaved + 
+                                  communicationMoneySaved + invoiceMoneySaved + 
+                                  setupMoneySaved + additionalRevenue + noShowRevenueSaved;
+
+            // Update UI
+            document.getElementById('totalTime').textContent = formatNumber(totalTimeSaved);
+            document.getElementById('totalMoney').textContent = formatCurrency(totalMoneySaved);
+            document.getElementById('totalClicks').textContent = formatNumber(clicksSaved);
+
+            document.getElementById('notesPerYear').textContent = formatNumber(notesPerYear);
+            document.getElementById('lettersPerYear').textContent = formatNumber(lettersPerYear);
+            
+            document.getElementById('noteTimeSaved').textContent = formatNumber(transcriptionTimeSaved) + ' hours';
+            document.getElementById('noteMoneySaved').textContent = formatCurrency(transcriptionMoneySaved);
+            
+            document.getElementById('letterTimeSaved').textContent = formatNumber(letterTimeSaved) + ' hours';
+            document.getElementById('letterMoneySaved').textContent = formatCurrency(letterMoneySaved);
+
+            document.getElementById('commTimeSaved').textContent = formatNumber(communicationTimeSaved) + ' hours';
+            document.getElementById('commMoneySaved').textContent = formatCurrency(communicationMoneySaved);
+
+            document.getElementById('invoiceTimeSaved').textContent = formatNumber(invoiceTimeSaved) + ' hours';
+            document.getElementById('additionalRevenue').textContent = formatCurrency(additionalRevenue);
+
+            document.getElementById('appointmentsRecovered').textContent = formatNumber(reducedNoShows);
+            document.getElementById('revenueProtected').textContent = formatCurrency(noShowRevenueSaved);
+
+            document.getElementById('clicksSaved').textContent = formatNumber(clicksSaved);
+            document.getElementById('setupTimeSaved').textContent = formatNumber(setupTimeSaved) + ' hours';
+            document.getElementById('setupMoneySaved').textContent = formatCurrency(setupMoneySaved);
+
+            document.getElementById('finalTime').textContent = formatNumber(totalTimeSaved) + ' hours';
+            document.getElementById('finalMoney').textContent = formatCurrency(totalMoneySaved);
+            document.getElementById('totalAppointments').textContent = formatNumber(patientsPerYear);
+        }
+
+        // Initial calculation
+        calculate();
+    </script>
+</body>
+</html>
