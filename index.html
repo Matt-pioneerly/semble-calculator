@@ -30,6 +30,15 @@
             margin-bottom: 3rem;
         }
 
+        .logo {
+            margin-bottom: 2rem;
+        }
+
+        .logo img {
+            height: 48px;
+            width: auto;
+        }
+
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
@@ -512,7 +521,19 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Semble Value Calculator</h1>
+            <div class="logo">
+                <svg width="180" height="40" viewBox="0 0 180 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Semble icon -->
+                    <rect width="40" height="40" rx="8" fill="#48B2A6"/>
+                    <path d="M20 8L24 12L20 16" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M20 24L16 20L20 16" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 20L8 16L12 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M28 20L32 24L28 28" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <!-- Semble text -->
+                    <text x="50" y="28" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="600" fill="#000605">Semble</text>
+                </svg>
+            </div>
+            <h1>Value Calculator</h1>
             <p>Discover how much time and money Semble can save your practice</p>
         </div>
 
@@ -700,11 +721,6 @@
                                 <label for="paymentOnline">Online payment system</label>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="adminHoursPerWeek">Admin hours per week (total team)</label>
-                        <input type="number" id="adminHoursPerWeek" value="20" min="0">
                     </div>
                 </div>
             </div>
@@ -941,7 +957,6 @@
         }
 
         function calculateAndShowResults() {
-            // Get all form values
             const patientsPerWeek = Number(document.getElementById('patientsPerWeek').value) || 0;
             const numClinicians = Number(document.getElementById('numClinicians').value) || 1;
             const numAdminStaff = Number(document.getElementById('numAdminStaff').value) || 0;
@@ -960,13 +975,10 @@
             const onlineBooking = document.querySelector('input[name="onlineBooking"]:checked').value;
             const reminders = document.querySelector('input[name="reminders"]:checked').value;
             const payment = document.querySelector('input[name="payment"]:checked').value;
-            const adminHoursPerWeek = Number(document.getElementById('adminHoursPerWeek').value) || 0;
 
-            // Calculations
             const weeksPerYear = 48;
             const patientsPerYear = patientsPerWeek * weeksPerYear;
 
-            // Specialty multipliers for documentation time
             const specialtyMultipliers = {
                 'psychiatry': 1.5,
                 'surgery': 1.3,
@@ -978,7 +990,6 @@
             };
             const specialtyMultiplier = specialtyMultipliers[specialty] || 1.0;
 
-            // AI Transcription
             const notesPerYear = patientsPerYear;
             const baseMinutesPerNote = consultLength >= 45 ? 10 : 8;
             const minutesPerManualNote = baseMinutesPerNote * specialtyMultiplier;
@@ -986,7 +997,6 @@
             const transcriptionTimeSaved = (notesPerYear * (minutesPerManualNote - minutesPerAINote)) / 60;
             const transcriptionMoneySaved = transcriptionTimeSaved * hourlyRate;
 
-            // Letters
             let lettersPerYear = 0;
             if (doPrescribe && doRefer) {
                 lettersPerYear = patientsPerYear * ((prescriptionPercent + referralPercent) / 100);
@@ -1000,37 +1010,32 @@
             const letterTimeSaved = (lettersPerYear * (minutesPerManualLetter - minutesPerAILetter)) / 60;
             const letterMoneySaved = letterTimeSaved * hourlyRate;
 
-            // Communication
             const bookingMultiplier = onlineBooking === 'no' ? 1.5 : onlineBooking === 'partial' ? 1.2 : 1.0;
             const communicationTimeSaved = (patientsPerYear * 3 * 1.9 * bookingMultiplier) / 60;
-            const communicationMoneySaved = communicationTimeSaved * (adminHoursPerWeek > 0 ? hourlyRate * 0.6 : hourlyRate);
+            const adminRate = numAdminStaff > 0 ? hourlyRate * 0.4 : hourlyRate * 0.6;
+            const communicationMoneySaved = communicationTimeSaved * adminRate;
 
-            // Invoices
             const paymentMultiplier = payment === 'manual' ? 1.5 : payment === 'card' ? 1.2 : 1.0;
             const lateInvoices = patientsPerYear * (lateInvoicePercent / 100);
             const invoiceTimeSaved = (lateInvoices * 10 * 0.7 * paymentMultiplier) / 60;
-            const invoiceMoneySaved = invoiceTimeSaved * (adminHoursPerWeek > 0 ? hourlyRate * 0.6 : hourlyRate);
+            const invoiceMoneySaved = invoiceTimeSaved * adminRate;
             const additionalRevenue = lateInvoices * appointmentValue * (payment === 'manual' ? 0.2 : 0.15);
 
-            // No-shows
             const reminderMultiplier = reminders === 'no' ? 0.5 : reminders === 'partial' ? 0.35 : 0.25;
             const currentNoShows = patientsPerYear * (noShowPercent / 100);
             const reducedNoShows = currentNoShows * reminderMultiplier;
             const noShowRevenueSaved = reducedNoShows * appointmentValue;
 
-            // Setup
             const newPatientsPerYear = patientsPerYear * 0.3;
             const clicksSaved = newPatientsPerYear * 37;
             const setupTimeSaved = (newPatientsPerYear * 9) / 60;
-            const setupMoneySaved = setupTimeSaved * (adminHoursPerWeek > 0 ? hourlyRate * 0.6 : hourlyRate);
+            const setupMoneySaved = setupTimeSaved * adminRate;
 
-            // Totals
             const totalTimeSaved = transcriptionTimeSaved + letterTimeSaved + communicationTimeSaved + 
                                  invoiceTimeSaved + setupTimeSaved;
             const totalMoneySaved = transcriptionMoneySaved + letterMoneySaved + communicationMoneySaved + 
                                   invoiceMoneySaved + setupMoneySaved + additionalRevenue + noShowRevenueSaved;
 
-            // Update UI
             document.getElementById('totalTime').textContent = formatNumber(totalTimeSaved);
             document.getElementById('totalMoney').textContent = formatCurrency(totalMoneySaved);
             document.getElementById('totalClicks').textContent = formatNumber(clicksSaved);
@@ -1061,13 +1066,11 @@
             document.getElementById('finalMoney').textContent = formatCurrency(totalMoneySaved);
             document.getElementById('totalAppointments').textContent = formatNumber(patientsPerYear);
             
-            // Per clinician stat - FIXED
             const perClinicianTime = totalTimeSaved / numClinicians;
             const perClinicianMoney = totalMoneySaved / numClinicians;
             document.getElementById('perClinicianStat').textContent = 
                 'That\'s ' + formatNumber(perClinicianTime) + ' hours and ' + formatCurrency(perClinicianMoney) + ' per clinician';
 
-            // Insights - FIXED
             let docInsightText = '';
             if (specialty === 'psychiatry') {
                 docInsightText = '<strong>💡 Insight:</strong> Psychiatry practices typically save even more time with AI documentation due to longer, more detailed notes.';
@@ -1100,11 +1103,9 @@
                 bookingInsightEl.style.display = 'none';
             }
 
-            // Move to results
             nextStep();
         }
 
-        // Initialize
         updateProgress();
     </script>
 </body>
