@@ -16,10 +16,11 @@
             background-color: #F3F5F3;
             color: #000605;
             line-height: 1.6;
+            min-height: 100vh;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 900px;
             margin: 0 auto;
             padding: 2rem;
         }
@@ -40,52 +41,142 @@
             color: #4C5456;
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
+        /* Progress Bar */
+        .progress-container {
+            margin-bottom: 3rem;
         }
 
-        @media (max-width: 1024px) {
-            .grid {
-                grid-template-columns: 1fr;
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #e5e7eb;
+            z-index: 0;
+        }
+
+        .progress-line-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: #48B2A6;
+            transition: width 0.3s ease;
+        }
+
+        .progress-step {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .progress-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-step.active .progress-circle {
+            border-color: #48B2A6;
+            background: #48B2A6;
+            color: white;
+        }
+
+        .progress-step.completed .progress-circle {
+            border-color: #48B2A6;
+            background: #48B2A6;
+            color: white;
+        }
+
+        .progress-label {
+            font-size: 0.875rem;
+            color: #4C5456;
+            text-align: center;
+        }
+
+        .progress-step.active .progress-label {
+            color: #000605;
+            font-weight: 600;
+        }
+
+        /* Form Styles */
+        .step-container {
+            display: none;
+        }
+
+        .step-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
         .card {
             background: white;
-            border-radius: 0.5rem;
-            padding: 1.5rem;
+            border-radius: 0.75rem;
+            padding: 2rem;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
             margin-bottom: 1.5rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid #e5e7eb;
         }
 
-        .card-header h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #000605;
         }
 
         .card-description {
             color: #4C5456;
             font-size: 0.875rem;
-            margin-top: 0.25rem;
+            margin-bottom: 2rem;
         }
 
-        .icon {
-            color: #007D7D;
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .form-group {
             margin-bottom: 1.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
         }
 
         label {
@@ -93,50 +184,140 @@
             font-weight: 500;
             margin-bottom: 0.5rem;
             font-size: 0.875rem;
+            color: #000605;
         }
 
-        input[type="number"] {
+        input[type="number"],
+        select {
             width: 100%;
-            padding: 0.5rem 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
             font-size: 1rem;
+            transition: border-color 0.2s;
         }
 
-        input[type="number"]:focus {
+        input[type="number"]:focus,
+        select:focus {
             outline: none;
             border-color: #48B2A6;
             box-shadow: 0 0 0 3px rgba(72, 178, 166, 0.1);
         }
 
-        input[type="checkbox"] {
-            width: 1rem;
-            height: 1rem;
-            margin-right: 0.5rem;
-        }
-
         .checkbox-group {
             display: flex;
             align-items: center;
-            margin-bottom: 0.5rem;
+            padding: 0.75rem;
+            background: #F3F5F3;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .checkbox-group:hover {
+            background: #e5e7eb;
+        }
+
+        input[type="checkbox"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-right: 0.75rem;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+            flex: 1;
         }
 
         .nested-input {
-            margin-left: 1.5rem;
-            margin-top: 0.5rem;
+            margin-left: 2rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #F9FAFB;
+            border-radius: 0.5rem;
         }
 
-        .separator {
-            height: 1px;
+        .radio-group {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background: #F3F5F3;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .radio-option:hover {
             background: #e5e7eb;
-            margin: 1.5rem 0;
         }
 
+        .radio-option input[type="radio"]:checked + label {
+            font-weight: 600;
+        }
+
+        input[type="radio"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-right: 0.75rem;
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        button {
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #48B2A6;
+            color: white;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .btn-primary:hover {
+            background: #3a9d92;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(72, 178, 166, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4C5456;
+            border: 2px solid #e5e7eb;
+        }
+
+        .btn-secondary:hover {
+            border-color: #48B2A6;
+            color: #48B2A6;
+        }
+
+        /* Results Styles */
         .summary-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         @media (max-width: 768px) {
@@ -147,10 +328,8 @@
 
         .summary-card {
             padding: 1.5rem;
-            border-radius: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
         }
 
         .summary-card.time {
@@ -166,23 +345,21 @@
         }
 
         .summary-icon {
-            font-size: 2rem;
-        }
-
-        .summary-content p {
-            margin: 0;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
         }
 
         .summary-label {
             font-size: 0.875rem;
-            opacity: 0.7;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
         }
 
         .summary-value {
-            font-size: 1.875rem;
+            font-size: 2.5rem;
             font-weight: 700;
             line-height: 1;
-            margin: 0.25rem 0;
+            margin-bottom: 0.25rem;
         }
 
         .summary-unit {
@@ -190,34 +367,61 @@
             font-weight: 500;
         }
 
+        .results-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .results-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: #000605;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .results-card-description {
+            color: #4C5456;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
         .metric-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
-            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .metric-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .metric {
-            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #F9FAFB;
+            border-radius: 0.5rem;
         }
 
         .metric-label {
             font-size: 0.875rem;
             color: #4C5456;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
         }
 
         .metric-value {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: 700;
-        }
-
-        .metric-value.green {
             color: #48B2A6;
         }
 
-        .metric-value.blue {
-            color: #A4B2FD;
+        .metric-value.large {
+            font-size: 2rem;
         }
 
         .badge {
@@ -226,84 +430,70 @@
             background: #e5e7eb;
             border-radius: 0.375rem;
             font-size: 0.875rem;
-            margin-top: 0.25rem;
+            margin-top: 0.5rem;
         }
 
         .final-summary {
             background: linear-gradient(135deg, #A4B2FD 0%, #B8A7FC 100%);
-            border: 2px solid #48B2A6;
-            border-radius: 0.5rem;
-            padding: 2rem;
+            border: 3px solid #48B2A6;
+            border-radius: 0.75rem;
+            padding: 2.5rem;
             text-align: center;
+            margin-top: 2rem;
         }
 
-        .final-summary h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
+        .final-summary h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
         }
 
         .final-grid {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 2rem;
+            gap: 3rem;
             flex-wrap: wrap;
-        }
-
-        .final-metric {
-            text-align: center;
+            margin-bottom: 1.5rem;
         }
 
         .final-metric-label {
-            font-size: 0.875rem;
-            opacity: 0.7;
-            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 0.75rem;
         }
 
         .final-metric-value {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: 700;
         }
 
         .plus {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: 700;
         }
 
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+        .restart-btn {
+            margin-top: 2rem;
+            background: white;
+            color: #000605;
+            border: 2px solid #000605;
         }
 
-        .results {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+        .restart-btn:hover {
+            background: #000605;
+            color: white;
         }
 
-        .two-col-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
+        .insight-box {
+            background: #FFF9E6;
+            border-left: 4px solid #FFBD3E;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
         }
 
-        @media (max-width: 768px) {
-            .two-col-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .three-col-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-        }
-
-        @media (max-width: 768px) {
-            .three-col-grid {
-                grid-template-columns: 1fr;
-            }
+        .insight-box strong {
+            color: #000605;
         }
     </style>
 </head>
@@ -314,18 +504,60 @@
             <p>Discover how much time and money Semble can save your practice</p>
         </div>
 
-        <div class="grid">
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <div class="card">
-                    <div class="card-header">
-                        <span class="icon">👥</span>
-                        <h2>Practice Information</h2>
-                    </div>
-                    
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-steps">
+                <div class="progress-line">
+                    <div class="progress-line-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-step active" data-step="1">
+                    <div class="progress-circle">1</div>
+                    <div class="progress-label">Practice Info</div>
+                </div>
+                <div class="progress-step" data-step="2">
+                    <div class="progress-circle">2</div>
+                    <div class="progress-label">Operations</div>
+                </div>
+                <div class="progress-step" data-step="3">
+                    <div class="progress-circle">3</div>
+                    <div class="progress-label">Your Value</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 1: Practice Information -->
+        <div class="step-container active" id="step1">
+            <div class="card">
+                <h2>Practice Information</h2>
+                <p class="card-description">Tell us about your practice so we can calculate your personalized value</p>
+                
+                <div class="form-grid">
                     <div class="form-group">
-                        <label for="patients">Patients per week</label>
-                        <input type="number" id="patients" value="50" min="0">
+                        <label for="patientsPerWeek">Patients per week</label>
+                        <input type="number" id="patientsPerWeek" value="50" min="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="numClinicians">Number of clinicians</label>
+                        <input type="number" id="numClinicians" value="1" min="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="numAdminStaff">Number of admin staff</label>
+                        <input type="number" id="numAdminStaff" value="1" min="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="specialty">Specialty area</label>
+                        <select id="specialty">
+                            <option value="general">General Practice</option>
+                            <option value="psychiatry">Psychiatry</option>
+                            <option value="physiotherapy">Physiotherapy</option>
+                            <option value="dermatology">Dermatology</option>
+                            <option value="cardiology">Cardiology</option>
+                            <option value="surgery">Surgery/Consultancy</option>
+                            <option value="other">Other Specialty</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
@@ -338,255 +570,338 @@
                         <input type="number" id="appointmentValue" value="150" min="0">
                     </div>
 
-                    <div class="separator"></div>
-
                     <div class="form-group">
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="prescribe" checked>
-                            <label for="prescribe" style="margin: 0;">I prescribe medications</label>
-                        </div>
-                        <div id="prescribeInputs" class="nested-input">
-                            <label for="prescriptionPercent">% of patients</label>
-                            <input type="number" id="prescriptionPercent" value="30" min="0" max="100">
-                        </div>
+                        <label for="consultLength">Average consultation length</label>
+                        <select id="consultLength">
+                            <option value="15">15 minutes</option>
+                            <option value="30" selected>30 minutes</option>
+                            <option value="45">45 minutes</option>
+                            <option value="60">60 minutes</option>
+                        </select>
                     </div>
 
-                    <div class="form-group">
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="refer" checked>
-                            <label for="refer" style="margin: 0;">I make referrals</label>
-                        </div>
-                        <div id="referInputs" class="nested-input">
-                            <label for="referralPercent">% of patients</label>
-                            <input type="number" id="referralPercent" value="20" min="0" max="100">
-                        </div>
-                    </div>
-                </div>
+                    <div class="form-group full-width">
+                        <label>Clinical activities (select all that apply)</label>
+                        <div style="display: grid; gap: 0.75rem; margin-top: 0.5rem;">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="doPrescribe" checked>
+                                <label for="doPrescribe">I prescribe medications</label>
+                            </div>
+                            <div id="prescribeInputs" class="nested-input">
+                                <label for="prescriptionPercent">% of patients requiring prescriptions</label>
+                                <input type="number" id="prescriptionPercent" value="30" min="0" max="100">
+                            </div>
+                            
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="doRefer" checked>
+                                <label for="doRefer">I make referrals</label>
+                            </div>
+                            <div id="referInputs" class="nested-input">
+                                <label for="referralPercent">% of patients requiring referrals</label>
+                                <input type="number" id="referralPercent" value="20" min="0" max="100">
+                            </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <span class="icon">📈</span>
-                        <h2>Operational Metrics</h2>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="lateInvoice">Late invoices (%)</label>
-                        <input type="number" id="lateInvoice" value="15" min="0" max="100">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="noShow">No-shows (%)</label>
-                        <input type="number" id="noShow" value="10" min="0" max="100">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="doInitialConsults" checked>
+                                <label for="doInitialConsults">I do initial consultations (typically longer notes)</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Results -->
-            <div class="results">
-                <!-- Summary Cards -->
-                <div class="summary-grid">
-                    <div class="summary-card time">
-                        <div class="summary-icon">⏰</div>
-                        <div class="summary-content">
-                            <p class="summary-label">Time Saved</p>
-                            <p class="summary-value" id="totalTime">0</p>
-                            <p class="summary-unit">hours/year</p>
-                        </div>
-                    </div>
-
-                    <div class="summary-card money">
-                        <div class="summary-icon">💰</div>
-                        <div class="summary-content">
-                            <p class="summary-label">Value Generated</p>
-                            <p class="summary-value" id="totalMoney">£0</p>
-                            <p class="summary-unit">per year</p>
-                        </div>
-                    </div>
-
-                    <div class="summary-card clicks">
-                        <div class="summary-icon">🖱️</div>
-                        <div class="summary-content">
-                            <p class="summary-label">Clicks Saved</p>
-                            <p class="summary-value" id="totalClicks">0</p>
-                            <p class="summary-unit">per year</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- AI Documentation -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="icon">📝</span>
-                        <div>
-                            <h2>AI Documentation & Letters</h2>
-                            <p class="card-description">Automated clinical notes and correspondence</p>
-                        </div>
-                    </div>
-                    
-                    <div class="metric-grid">
-                        <div class="metric">
-                            <p class="metric-label">Notes created per year</p>
-                            <p class="metric-value" id="notesPerYear">0</p>
-                        </div>
-                        <div class="metric">
-                            <p class="metric-label">Letters generated per year</p>
-                            <p class="metric-value" id="lettersPerYear">0</p>
-                        </div>
-                    </div>
-
-                    <div class="separator"></div>
-
-                    <div class="metric-grid">
-                        <div class="metric">
-                            <p class="metric-label">Time saved on notes</p>
-                            <p class="metric-value green" id="noteTimeSaved">0 hours</p>
-                            <span class="badge" id="noteMoneySaved">£0</span>
-                        </div>
-                        <div class="metric">
-                            <p class="metric-label">Time saved on letters</p>
-                            <p class="metric-value green" id="letterTimeSaved">0 hours</p>
-                            <span class="badge" id="letterMoneySaved">£0</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Booking & Communication -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="icon">📅</span>
-                        <div>
-                            <h2>Booking & Communication Automation</h2>
-                            <p class="card-description">Seamless scheduling and patient communication</p>
-                        </div>
-                    </div>
-                    
-                    <div class="metric-grid">
-                        <div class="metric">
-                            <p class="metric-label">Time saved</p>
-                            <p class="metric-value green" id="commTimeSaved">0 hours</p>
-                        </div>
-                        <div class="metric">
-                            <p class="metric-label">Value generated</p>
-                            <p class="metric-value green" id="commMoneySaved">£0</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Payment & No-shows -->
-                <div class="two-col-grid">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Payment Collection</h2>
-                        </div>
-                        <p class="card-description">Automated invoicing and follow-ups</p>
-                        
-                        <div class="metric" style="margin-top: 1rem;">
-                            <p class="metric-label">Time saved chasing invoices</p>
-                            <p class="metric-value green" id="invoiceTimeSaved">0 hours</p>
-                        </div>
-                        <div class="metric">
-                            <p class="metric-label">Additional revenue collected</p>
-                            <p class="metric-value green" id="additionalRevenue">£0</p>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>No-Show Reduction</h2>
-                        </div>
-                        <p class="card-description">Automated reminders and confirmations</p>
-                        
-                        <div class="metric" style="margin-top: 1rem;">
-                            <p class="metric-label">Appointments recovered</p>
-                            <p class="metric-value blue" id="appointmentsRecovered">0</p>
-                        </div>
-                        <div class="metric">
-                            <p class="metric-label">Revenue protected</p>
-                            <p class="metric-value green" id="revenueProtected">£0</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Patient Setup -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="icon">🖱️</span>
-                        <div>
-                            <h2>Patient Setup Efficiency</h2>
-                            <p class="card-description">Streamlined onboarding process</p>
-                        </div>
-                    </div>
-                    
-                    <div class="three-col-grid">
-                        <div class="metric">
-                            <p class="metric-label">Clicks saved</p>
-                            <p class="metric-value" id="clicksSaved">0</p>
-                        </div>
-                        <div class="metric">
-                            <p class="metric-label">Time saved</p>
-                            <p class="metric-value green" id="setupTimeSaved">0 hours</p>
-                        </div>
-                        <div class="metric">
-                            <p class="metric-label">Value generated</p>
-                            <p class="metric-value green" id="setupMoneySaved">£0</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="button-group">
+                <div></div>
+                <button class="btn-primary" onclick="nextStep()">Next →</button>
             </div>
         </div>
 
-        <!-- Final Summary -->
-        <div class="final-summary">
-            <h3>Your Annual Semble Value</h3>
-            <div class="final-grid">
-                <div class="final-metric">
-                    <p class="final-metric-label">Total Time Saved</p>
-                    <p class="final-metric-value" id="finalTime">0 hours</p>
-                </div>
-                <div class="plus">+</div>
-                <div class="final-metric">
-                    <p class="final-metric-label">Total Value Generated</p>
-                    <p class="final-metric-value" id="finalMoney">£0</p>
+        <!-- Step 2: Operational Metrics -->
+        <div class="step-container" id="step2">
+            <div class="card">
+                <h2>Operational Metrics</h2>
+                <p class="card-description">Help us understand your current operational challenges</p>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="lateInvoicePercent">Late or unpaid invoices (%)</label>
+                        <input type="number" id="lateInvoicePercent" value="15" min="0" max="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="noShowPercent">No-shows & cancellations (%)</label>
+                        <input type="number" id="noShowPercent" value="10" min="0" max="100">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Do you currently use online booking?</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="bookingNo" name="onlineBooking" value="no" checked>
+                                <label for="bookingNo">No, all bookings are manual</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="bookingPartial" name="onlineBooking" value="partial">
+                                <label for="bookingPartial">Yes, but it's clunky or limited</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="bookingYes" name="onlineBooking" value="yes">
+                                <label for="bookingYes">Yes, and it works well</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Do you send automated appointment reminders?</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="remindersNo" name="reminders" value="no" checked>
+                                <label for="remindersNo">No, manual or no reminders</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="remindersPartial" name="reminders" value="partial">
+                                <label for="remindersPartial">Yes, but inconsistently</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="remindersYes" name="reminders" value="yes">
+                                <label for="remindersYes">Yes, automatically for all appointments</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>How do you primarily collect payments?</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="paymentManual" name="payment" value="manual" checked>
+                                <label for="paymentManual">Manual (cash/cheque/bank transfer)</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="paymentCard" name="payment" value="card">
+                                <label for="paymentCard">Card machine at time of appointment</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="paymentOnline" name="payment" value="online">
+                                <label for="paymentOnline">Online payment system</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="adminHoursPerWeek">Admin hours per week (total team)</label>
+                        <input type="number" id="adminHoursPerWeek" value="20" min="0">
+                    </div>
                 </div>
             </div>
-            <p style="margin-top: 1.5rem; opacity: 0.7; font-size: 0.875rem;">
-                Based on <span id="totalAppointments">2,400</span> patient appointments per year
-            </p>
+
+            <div class="button-group">
+                <button class="btn-secondary" onclick="previousStep()">← Back</button>
+                <button class="btn-primary" onclick="calculateAndShowResults()">See My Results →</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Results -->
+        <div class="step-container" id="step3">
+            <!-- Summary Cards -->
+            <div class="summary-grid">
+                <div class="summary-card time">
+                    <div class="summary-icon">⏰</div>
+                    <p class="summary-label">Time Saved</p>
+                    <p class="summary-value" id="totalTime">0</p>
+                    <p class="summary-unit">hours/year</p>
+                </div>
+
+                <div class="summary-card money">
+                    <div class="summary-icon">💰</div>
+                    <p class="summary-label">Value Generated</p>
+                    <p class="summary-value" id="totalMoney">£0</p>
+                    <p class="summary-unit">per year</p>
+                </div>
+
+                <div class="summary-card clicks">
+                    <div class="summary-icon">🖱️</div>
+                    <p class="summary-label">Clicks Saved</p>
+                    <p class="summary-value" id="totalClicks">0</p>
+                    <p class="summary-unit">per year</p>
+                </div>
+            </div>
+
+            <!-- Detailed Results -->
+            <div class="results-card">
+                <h3>📝 AI Documentation & Letters</h3>
+                <p class="results-card-description">Automated clinical notes and correspondence</p>
+                
+                <div class="metric-grid">
+                    <div class="metric">
+                        <p class="metric-label">Notes created per year</p>
+                        <p class="metric-value large" id="notesPerYear">0</p>
+                    </div>
+                    <div class="metric">
+                        <p class="metric-label">Letters generated per year</p>
+                        <p class="metric-value large" id="lettersPerYear">0</p>
+                    </div>
+                    <div class="metric">
+                        <p class="metric-label">Time saved on notes</p>
+                        <p class="metric-value" id="noteTimeSaved">0 hours</p>
+                        <span class="badge" id="noteMoneySaved">£0</span>
+                    </div>
+                    <div class="metric">
+                        <p class="metric-label">Time saved on letters</p>
+                        <p class="metric-value" id="letterTimeSaved">0 hours</p>
+                        <span class="badge" id="letterMoneySaved">£0</span>
+                    </div>
+                </div>
+                <div class="insight-box" id="docInsight"></div>
+            </div>
+
+            <div class="results-card">
+                <h3>📅 Booking & Communication</h3>
+                <p class="results-card-description">Seamless scheduling and patient communication</p>
+                
+                <div class="metric-grid">
+                    <div class="metric">
+                        <p class="metric-label">Admin time saved</p>
+                        <p class="metric-value" id="commTimeSaved">0 hours</p>
+                    </div>
+                    <div class="metric">
+                        <p class="metric-label">Value generated</p>
+                        <p class="metric-value" id="commMoneySaved">£0</p>
+                    </div>
+                </div>
+                <div class="insight-box" id="bookingInsight"></div>
+            </div>
+
+            <div class="metric-grid">
+                <div class="results-card">
+                    <h3>💳 Payment Collection</h3>
+                    <p class="results-card-description">Automated invoicing</p>
+                    
+                    <div class="metric">
+                        <p class="metric-label">Time saved chasing</p>
+                        <p class="metric-value" id="invoiceTimeSaved">0 hours</p>
+                    </div>
+                    <div class="metric">
+                        <p class="metric-label">Revenue recovered</p>
+                        <p class="metric-value" id="additionalRevenue">£0</p>
+                    </div>
+                </div>
+
+                <div class="results-card">
+                    <h3>📞 No-Show Reduction</h3>
+                    <p class="results-card-description">Automated reminders</p>
+                    
+                    <div class="metric">
+                        <p class="metric-label">Appointments saved</p>
+                        <p class="metric-value" id="appointmentsRecovered">0</p>
+                    </div>
+                    <div class="metric">
+                        <p class="metric-label">Revenue protected</p>
+                        <p class="metric-value" id="revenueProtected">£0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-card">
+                <h3>🖱️ Patient Setup Efficiency</h3>
+                <p class="results-card-description">Streamlined onboarding</p>
+                
+                <div class="metric-grid">
+                    <div class="metric">
+                        <p class="metric-label">Clicks saved</p>
+                        <p class="metric-value large" id="clicksSaved">0</p>
+                    </div>
+                    <div class="metric">
+                        <p class="metric-label">Time saved</p>
+                        <p class="metric-value" id="setupTimeSaved">0 hours</p>
+                    </div>
+                    <div class="metric" style="grid-column: 1 / -1;">
+                        <p class="metric-label">Value generated</p>
+                        <p class="metric-value" id="setupMoneySaved">£0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Final Summary -->
+            <div class="final-summary">
+                <h2>Your Annual Semble Value</h2>
+                <div class="final-grid">
+                    <div>
+                        <p class="final-metric-label">Total Time Saved</p>
+                        <p class="final-metric-value" id="finalTime">0 hours</p>
+                    </div>
+                    <div class="plus">+</div>
+                    <div>
+                        <p class="final-metric-label">Total Value Generated</p>
+                        <p class="final-metric-value" id="finalMoney">£0</p>
+                    </div>
+                </div>
+                <p style="opacity: 0.8; margin-top: 1rem;">
+                    Based on <span id="totalAppointments">2,400</span> appointments per year
+                </p>
+                <p style="opacity: 0.8; margin-top: 0.5rem;" id="perClinicianStat"></p>
+                
+                <button class="btn-primary restart-btn" onclick="restartCalculator()">Start Over</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // Get all inputs
-        const inputs = {
-            patients: document.getElementById('patients'),
-            hourlyRate: document.getElementById('hourlyRate'),
-            appointmentValue: document.getElementById('appointmentValue'),
-            prescribe: document.getElementById('prescribe'),
-            prescriptionPercent: document.getElementById('prescriptionPercent'),
-            refer: document.getElementById('refer'),
-            referralPercent: document.getElementById('referralPercent'),
-            lateInvoice: document.getElementById('lateInvoice'),
-            noShow: document.getElementById('noShow')
-        };
+        let currentStep = 1;
+        const formData = {};
 
         // Toggle nested inputs
-        inputs.prescribe.addEventListener('change', () => {
-            document.getElementById('prescribeInputs').style.display = 
-                inputs.prescribe.checked ? 'block' : 'none';
-            calculate();
+        document.getElementById('doPrescribe').addEventListener('change', function() {
+            document.getElementById('prescribeInputs').style.display = this.checked ? 'block' : 'none';
         });
 
-        inputs.refer.addEventListener('change', () => {
-            document.getElementById('referInputs').style.display = 
-                inputs.refer.checked ? 'block' : 'none';
-            calculate();
+        document.getElementById('doRefer').addEventListener('change', function() {
+            document.getElementById('referInputs').style.display = this.checked ? 'block' : 'none';
         });
 
-        // Add event listeners to all inputs
-        Object.values(inputs).forEach(input => {
-            input.addEventListener('input', calculate);
-            input.addEventListener('change', calculate);
-        });
+        function updateProgress() {
+            const steps = document.querySelectorAll('.progress-step');
+            const fill = document.getElementById('progressFill');
+            
+            steps.forEach((step, index) => {
+                const stepNum = index + 1;
+                if (stepNum < currentStep) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                } else if (stepNum === currentStep) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+            });
+
+            const progress = ((currentStep - 1) / 2) * 100;
+            fill.style.width = progress + '%';
+        }
+
+        function nextStep() {
+            document.getElementById('step' + currentStep).classList.remove('active');
+            currentStep++;
+            document.getElementById('step' + currentStep).classList.add('active');
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function previousStep() {
+            document.getElementById('step' + currentStep).classList.remove('active');
+            currentStep--;
+            document.getElementById('step' + currentStep).classList.add('active');
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function restartCalculator() {
+            currentStep = 1;
+            document.querySelectorAll('.step-container').forEach(step => step.classList.remove('active'));
+            document.getElementById('step1').classList.add('active');
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         function formatNumber(num) {
             return Math.round(num).toLocaleString();
@@ -596,62 +911,95 @@
             return '£' + formatNumber(num);
         }
 
-        function calculate() {
-            const patientsPerWeek = Number(inputs.patients.value) || 0;
-            const hourlyRate = Number(inputs.hourlyRate.value) || 0;
-            const appointmentValue = Number(inputs.appointmentValue.value) || 0;
-            const prescriptionPercent = Number(inputs.prescriptionPercent.value) || 0;
-            const referralPercent = Number(inputs.referralPercent.value) || 0;
-            const lateInvoicePercent = Number(inputs.lateInvoice.value) || 0;
-            const noShowPercent = Number(inputs.noShow.value) || 0;
+        function calculateAndShowResults() {
+            // Get all form values
+            const patientsPerWeek = Number(document.getElementById('patientsPerWeek').value) || 0;
+            const numClinicians = Number(document.getElementById('numClinicians').value) || 1;
+            const numAdminStaff = Number(document.getElementById('numAdminStaff').value) || 0;
+            const specialty = document.getElementById('specialty').value;
+            const hourlyRate = Number(document.getElementById('hourlyRate').value) || 0;
+            const appointmentValue = Number(document.getElementById('appointmentValue').value) || 0;
+            const consultLength = Number(document.getElementById('consultLength').value) || 30;
+            const doPrescribe = document.getElementById('doPrescribe').checked;
+            const prescriptionPercent = Number(document.getElementById('prescriptionPercent').value) || 0;
+            const doRefer = document.getElementById('doRefer').checked;
+            const referralPercent = Number(document.getElementById('referralPercent').value) || 0;
+            const doInitialConsults = document.getElementById('doInitialConsults').checked;
+            
+            const lateInvoicePercent = Number(document.getElementById('lateInvoicePercent').value) || 0;
+            const noShowPercent = Number(document.getElementById('noShowPercent').value) || 0;
+            const onlineBooking = document.querySelector('input[name="onlineBooking"]:checked').value;
+            const reminders = document.querySelector('input[name="reminders"]:checked').value;
+            const payment = document.querySelector('input[name="payment"]:checked').value;
+            const adminHoursPerWeek = Number(document.getElementById('adminHoursPerWeek').value) || 0;
 
+            // Calculations
             const weeksPerYear = 48;
             const patientsPerYear = patientsPerWeek * weeksPerYear;
 
-            // AI Transcription
+            // Specialty multipliers for documentation time
+            const specialtyMultipliers = {
+                'psychiatry': 1.5,  // Longer notes
+                'surgery': 1.3,     // More detailed documentation
+                'general': 1.0,
+                'physiotherapy': 0.9,
+                'dermatology': 0.9,
+                'cardiology': 1.2,
+                'other': 1.0
+            };
+            const specialtyMultiplier = specialtyMultipliers[specialty] || 1.0;
+
+            // AI Transcription - adjusted for specialty and consultation length
             const notesPerYear = patientsPerYear;
-            const transcriptionTimeSaved = (notesPerYear * 6) / 60; // 8 min manual - 2 min AI
+            const baseMinutesPerNote = consultLength >= 45 ? 10 : 8;
+            const minutesPerManualNote = baseMinutesPerNote * specialtyMultiplier;
+            const minutesPerAINote = 2;
+            const transcriptionTimeSaved = (notesPerYear * (minutesPerManualNote - minutesPerAINote)) / 60;
             const transcriptionMoneySaved = transcriptionTimeSaved * hourlyRate;
 
-            // Letters
+            // Letters - adjusted for specialty
             let lettersPerYear = 0;
-            if (inputs.prescribe.checked && inputs.refer.checked) {
+            if (doPrescribe && doRefer) {
                 lettersPerYear = patientsPerYear * ((prescriptionPercent + referralPercent) / 100);
-            } else if (inputs.prescribe.checked) {
+            } else if (doPrescribe) {
                 lettersPerYear = patientsPerYear * (prescriptionPercent / 100);
-            } else if (inputs.refer.checked) {
+            } else if (doRefer) {
                 lettersPerYear = patientsPerYear * (referralPercent / 100);
             }
-            const letterTimeSaved = (lettersPerYear * 12) / 60; // 15 min manual - 3 min AI
+            const minutesPerManualLetter = specialty === 'surgery' || specialty === 'psychiatry' ? 18 : 15;
+            const minutesPerAILetter = 3;
+            const letterTimeSaved = (lettersPerYear * (minutesPerManualLetter - minutesPerAILetter)) / 60;
             const letterMoneySaved = letterTimeSaved * hourlyRate;
 
-            // Communication
-            const communicationTimeSaved = (patientsPerYear * 3 * 1.9) / 60; // 2 min manual - 0.1 min auto
-            const communicationMoneySaved = communicationTimeSaved * hourlyRate;
+            // Booking & Communication - adjusted based on current system
+            const bookingMultiplier = onlineBooking === 'no' ? 1.5 : onlineBooking === 'partial' ? 1.2 : 1.0;
+            const communicationTimeSaved = (patientsPerYear * 3 * 1.9 * bookingMultiplier) / 60;
+            const communicationMoneySaved = communicationTimeSaved * (adminHoursPerWeek > 0 ? hourlyRate * 0.6 : hourlyRate);
 
-            // Invoices
+            // Invoices - adjusted based on payment method
+            const paymentMultiplier = payment === 'manual' ? 1.5 : payment === 'card' ? 1.2 : 1.0;
             const lateInvoices = patientsPerYear * (lateInvoicePercent / 100);
-            const invoiceTimeSaved = (lateInvoices * 10 * 0.7) / 60;
-            const invoiceMoneySaved = invoiceTimeSaved * hourlyRate;
-            const additionalRevenue = lateInvoices * appointmentValue * 0.15;
+            const invoiceTimeSaved = (lateInvoices * 10 * 0.7 * paymentMultiplier) / 60;
+            const invoiceMoneySaved = invoiceTimeSaved * (adminHoursPerWeek > 0 ? hourlyRate * 0.6 : hourlyRate);
+            const additionalRevenue = lateInvoices * appointmentValue * (payment === 'manual' ? 0.2 : 0.15);
 
-            // No-shows
+            // No-shows - adjusted based on reminder system
+            const reminderMultiplier = reminders === 'no' ? 0.5 : reminders === 'partial' ? 0.35 : 0.25;
             const currentNoShows = patientsPerYear * (noShowPercent / 100);
-            const reducedNoShows = currentNoShows * 0.4;
+            const reducedNoShows = currentNoShows * reminderMultiplier;
             const noShowRevenueSaved = reducedNoShows * appointmentValue;
 
             // Setup
             const newPatientsPerYear = patientsPerYear * 0.3;
-            const clicksSaved = newPatientsPerYear * 37; // 45 - 8
-            const setupTimeSaved = (newPatientsPerYear * 9) / 60; // 12 - 3
-            const setupMoneySaved = setupTimeSaved * hourlyRate;
+            const clicksSaved = newPatientsPerYear * 37;
+            const setupTimeSaved = (newPatientsPerYear * 9) / 60;
+            const setupMoneySaved = setupTimeSaved * (adminHoursPerWeek > 0 ? hourlyRate * 0.6 : hourlyRate);
 
             // Totals
-            const totalTimeSaved = transcriptionTimeSaved + letterTimeSaved + 
-                                 communicationTimeSaved + invoiceTimeSaved + setupTimeSaved;
-            const totalMoneySaved = transcriptionMoneySaved + letterMoneySaved + 
-                                  communicationMoneySaved + invoiceMoneySaved + 
-                                  setupMoneySaved + additionalRevenue + noShowRevenueSaved;
+            const totalTimeSaved = transcriptionTimeSaved + letterTimeSaved + communicationTimeSaved + 
+                                 invoiceTimeSaved + setupTimeSaved;
+            const totalMoneySaved = transcriptionMoneySaved + letterMoneySaved + communicationMoneySaved + 
+                                  invoiceMoneySaved + setupMoneySaved + additionalRevenue + noShowRevenueSaved;
 
             // Update UI
             document.getElementById('totalTime').textContent = formatNumber(totalTimeSaved);
@@ -683,10 +1031,36 @@
             document.getElementById('finalTime').textContent = formatNumber(totalTimeSaved) + ' hours';
             document.getElementById('finalMoney').textContent = formatCurrency(totalMoneySaved);
             document.getElementById('totalAppointments').textContent = formatNumber(patientsPerYear);
+            
+            // Per clinician stat
+            const perClinicianTime = totalTimeSaved / numClinicians;
+            const perClinicianMoney = totalMoneySaved / numClinicians;
+            document.getElementById('perClinicianStat').textContent = 
+                `That's \${formatNumber(perClinicianTime)} hours and \${formatCurrency(perClinicianMoney)} per clinician`;
+
+            // Insights
+            const docInsightText = specialty === 'psychiatry' || specialty === 'surgery' 
+                ? `<strong>💡 Insight:</strong> \${specialty === 'psychiatry' ? 'Psychiatry' : 'Surgical'} practices typically save even more time with AI documentation due to longer, more detailed notes.`
+                : doInitialConsults 
+                ? '<strong>💡 Insight:</strong> Initial consultations often require the most detailed documentation - AI transcription excels here.'
+                : '';
+            document.getElementById('docInsight').innerHTML = docInsightText;
+            document.getElementById('docInsight').style.display = docInsightText ? 'block' : 'none';
+
+            const bookingInsightText = onlineBooking === 'no' 
+                ? '<strong>💡 Insight:</strong> Without online booking, you could save significant admin time. Your actual savings may be even higher!'
+                : reminders === 'no'
+                ? '<strong>💡 Insight:</strong> Automated reminders alone could reduce your no-shows by up to 50%!'
+                : '';
+            document.getElementById('bookingInsight').innerHTML = bookingInsightText;
+            document.getElementById('bookingInsight').style.display = bookingInsightText ? 'block' : 'none';
+
+            // Move to results
+            nextStep();
         }
 
-        // Initial calculation
-        calculate();
+        // Initialize
+        updateProgress();
     </script>
 </body>
 </html>
