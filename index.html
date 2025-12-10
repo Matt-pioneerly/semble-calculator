@@ -187,6 +187,18 @@
             color: #000605;
         }
 
+        .label-with-hint {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .label-hint {
+            font-size: 0.75rem;
+            color: #48B2A6;
+            font-weight: 400;
+        }
+
         input[type="number"],
         select {
             width: 100%;
@@ -566,11 +578,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="appointmentValue">Average appointment value (£)</label>
-                        <input type="number" id="appointmentValue" value="150" min="0">
-                    </div>
-
-                    <div class="form-group">
                         <label for="consultLength">Average consultation length</label>
                         <select id="consultLength">
                             <option value="15">15 minutes</option>
@@ -578,6 +585,14 @@
                             <option value="45">45 minutes</option>
                             <option value="60">60 minutes</option>
                         </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <div class="label-with-hint">
+                            <label for="appointmentValue">Average appointment value (£)</label>
+                            <span class="label-hint">Auto-calculated, but you can override</span>
+                        </div>
+                        <input type="number" id="appointmentValue" value="50" min="0">
                     </div>
 
                     <div class="form-group full-width">
@@ -751,7 +766,7 @@
                         <span class="badge" id="letterMoneySaved">£0</span>
                     </div>
                 </div>
-                <div class="insight-box" id="docInsight"></div>
+                <div class="insight-box" id="docInsight" style="display: none;"></div>
             </div>
 
             <div class="results-card">
@@ -768,7 +783,7 @@
                         <p class="metric-value" id="commMoneySaved">£0</p>
                     </div>
                 </div>
-                <div class="insight-box" id="bookingInsight"></div>
+                <div class="insight-box" id="bookingInsight" style="display: none;"></div>
             </div>
 
             <div class="metric-grid">
@@ -847,7 +862,21 @@
 
     <script>
         let currentStep = 1;
-        const formData = {};
+
+        // Auto-calculate appointment value based on hourly rate and consultation length
+        function updateAppointmentValue() {
+            const hourlyRate = Number(document.getElementById('hourlyRate').value) || 0;
+            const consultLength = Number(document.getElementById('consultLength').value) || 30;
+            const calculatedValue = (hourlyRate / 60) * consultLength;
+            document.getElementById('appointmentValue').value = Math.round(calculatedValue);
+        }
+
+        // Update appointment value when inputs change
+        document.getElementById('hourlyRate').addEventListener('input', updateAppointmentValue);
+        document.getElementById('consultLength').addEventListener('change', updateAppointmentValue);
+
+        // Initialize appointment value
+        updateAppointmentValue();
 
         // Toggle nested inputs
         document.getElementById('doPrescribe').addEventListener('change', function() {
@@ -939,8 +968,8 @@
 
             // Specialty multipliers for documentation time
             const specialtyMultipliers = {
-                'psychiatry': 1.5,  // Longer notes
-                'surgery': 1.3,     // More detailed documentation
+                'psychiatry': 1.5,
+                'surgery': 1.3,
                 'general': 1.0,
                 'physiotherapy': 0.9,
                 'dermatology': 0.9,
@@ -949,7 +978,7 @@
             };
             const specialtyMultiplier = specialtyMultipliers[specialty] || 1.0;
 
-            // AI Transcription - adjusted for specialty and consultation length
+            // AI Transcription
             const notesPerYear = patientsPerYear;
             const baseMinutesPerNote = consultLength >= 45 ? 10 : 8;
             const minutesPerManualNote = baseMinutesPerNote * specialtyMultiplier;
@@ -957,7 +986,7 @@
             const transcriptionTimeSaved = (notesPerYear * (minutesPerManualNote - minutesPerAINote)) / 60;
             const transcriptionMoneySaved = transcriptionTimeSaved * hourlyRate;
 
-            // Letters - adjusted for specialty
+            // Letters
             let lettersPerYear = 0;
             if (doPrescribe && doRefer) {
                 lettersPerYear = patientsPerYear * ((prescriptionPercent + referralPercent) / 100);
@@ -971,19 +1000,19 @@
             const letterTimeSaved = (lettersPerYear * (minutesPerManualLetter - minutesPerAILetter)) / 60;
             const letterMoneySaved = letterTimeSaved * hourlyRate;
 
-            // Booking & Communication - adjusted based on current system
+            // Communication
             const bookingMultiplier = onlineBooking === 'no' ? 1.5 : onlineBooking === 'partial' ? 1.2 : 1.0;
             const communicationTimeSaved = (patientsPerYear * 3 * 1.9 * bookingMultiplier) / 60;
             const communicationMoneySaved = communicationTimeSaved * (adminHoursPerWeek > 0 ? hourlyRate * 0.6 : hourlyRate);
 
-            // Invoices - adjusted based on payment method
+            // Invoices
             const paymentMultiplier = payment === 'manual' ? 1.5 : payment === 'card' ? 1.2 : 1.0;
             const lateInvoices = patientsPerYear * (lateInvoicePercent / 100);
             const invoiceTimeSaved = (lateInvoices * 10 * 0.7 * paymentMultiplier) / 60;
             const invoiceMoneySaved = invoiceTimeSaved * (adminHoursPerWeek > 0 ? hourlyRate * 0.6 : hourlyRate);
             const additionalRevenue = lateInvoices * appointmentValue * (payment === 'manual' ? 0.2 : 0.15);
 
-            // No-shows - adjusted based on reminder system
+            // No-shows
             const reminderMultiplier = reminders === 'no' ? 0.5 : reminders === 'partial' ? 0.35 : 0.25;
             const currentNoShows = patientsPerYear * (noShowPercent / 100);
             const reducedNoShows = currentNoShows * reminderMultiplier;
@@ -1032,28 +1061,44 @@
             document.getElementById('finalMoney').textContent = formatCurrency(totalMoneySaved);
             document.getElementById('totalAppointments').textContent = formatNumber(patientsPerYear);
             
-            // Per clinician stat
+            // Per clinician stat - FIXED
             const perClinicianTime = totalTimeSaved / numClinicians;
             const perClinicianMoney = totalMoneySaved / numClinicians;
             document.getElementById('perClinicianStat').textContent = 
-                `That's \${formatNumber(perClinicianTime)} hours and \${formatCurrency(perClinicianMoney)} per clinician`;
+                'That\'s ' + formatNumber(perClinicianTime) + ' hours and ' + formatCurrency(perClinicianMoney) + ' per clinician';
 
-            // Insights
-            const docInsightText = specialty === 'psychiatry' || specialty === 'surgery' 
-                ? `<strong>💡 Insight:</strong> \${specialty === 'psychiatry' ? 'Psychiatry' : 'Surgical'} practices typically save even more time with AI documentation due to longer, more detailed notes.`
-                : doInitialConsults 
-                ? '<strong>💡 Insight:</strong> Initial consultations often require the most detailed documentation - AI transcription excels here.'
-                : '';
-            document.getElementById('docInsight').innerHTML = docInsightText;
-            document.getElementById('docInsight').style.display = docInsightText ? 'block' : 'none';
+            // Insights - FIXED
+            let docInsightText = '';
+            if (specialty === 'psychiatry') {
+                docInsightText = '<strong>💡 Insight:</strong> Psychiatry practices typically save even more time with AI documentation due to longer, more detailed notes.';
+            } else if (specialty === 'surgery') {
+                docInsightText = '<strong>💡 Insight:</strong> Surgical practices typically save even more time with AI documentation due to longer, more detailed notes.';
+            } else if (doInitialConsults) {
+                docInsightText = '<strong>💡 Insight:</strong> Initial consultations often require the most detailed documentation - AI transcription excels here.';
+            }
+            
+            const docInsightEl = document.getElementById('docInsight');
+            if (docInsightText) {
+                docInsightEl.innerHTML = docInsightText;
+                docInsightEl.style.display = 'block';
+            } else {
+                docInsightEl.style.display = 'none';
+            }
 
-            const bookingInsightText = onlineBooking === 'no' 
-                ? '<strong>💡 Insight:</strong> Without online booking, you could save significant admin time. Your actual savings may be even higher!'
-                : reminders === 'no'
-                ? '<strong>💡 Insight:</strong> Automated reminders alone could reduce your no-shows by up to 50%!'
-                : '';
-            document.getElementById('bookingInsight').innerHTML = bookingInsightText;
-            document.getElementById('bookingInsight').style.display = bookingInsightText ? 'block' : 'none';
+            let bookingInsightText = '';
+            if (onlineBooking === 'no') {
+                bookingInsightText = '<strong>💡 Insight:</strong> Without online booking, you could save significant admin time. Your actual savings may be even higher!';
+            } else if (reminders === 'no') {
+                bookingInsightText = '<strong>💡 Insight:</strong> Automated reminders alone could reduce your no-shows by up to 50%!';
+            }
+            
+            const bookingInsightEl = document.getElementById('bookingInsight');
+            if (bookingInsightText) {
+                bookingInsightEl.innerHTML = bookingInsightText;
+                bookingInsightEl.style.display = 'block';
+            } else {
+                bookingInsightEl.style.display = 'none';
+            }
 
             // Move to results
             nextStep();
